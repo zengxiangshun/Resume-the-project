@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?> 
+<!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Mapper 3.0" "http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+<mapper namespace="com.qhit.addupload2.dao.IAddupload2Dao"> 
+	<!-- 自定义结果集 --> 
+	<resultMap id="BaseResultMap" type="com.qhit.addupload2.pojo.Addupload2"> 
+		<id property="id" column="id" javaType="java.lang.Integer"></id> 
+		<result property="name" column="name" javaType="java.lang.String"></result> 
+		<result property="size" column="size" javaType="java.lang.String"></result> 
+		<result property="todate" column="todate" javaType="java.lang.String"></result> 
+		<result property="userId" column="user_id" javaType="java.lang.Integer"></result> 
+		<association property="baseUser" javaType="com.qhit.baseUser.pojo.BaseUser">
+			<result property="cname" column="cname" javaType="java.lang.String"></result>
+		</association>
+	</resultMap> 
+ 
+	<!-- 在各种标签中，id属性必须与接口中的方法名一样，id的值必须是唯一的，parameterType指查询时使用的参数类型， 
+	resultType属性指明查询返回的结果集类型    --> 
+ 
+	<sql id="Base_Column_List" > 
+		id,name,size,todate,user_id 
+	</sql> 
+	<select id="findById" resultMap="BaseResultMap" parameterType="java.lang.Integer" > 
+		select 
+		<include refid="Base_Column_List" /> 
+		from addupload2 
+		where id = #{id} 
+	</select> 
+	<delete id="delete" parameterType="java.lang.Integer" > 
+		delete from addupload2 
+		where id = #{id} 
+	</delete> 
+	<insert id="insert" parameterType="com.qhit.addupload2.pojo.Addupload2" > 
+		insert into addupload2(name,size,todate,user_id) 
+		values (#{name},#{size},#{todate},#{userId}) 
+	</insert> 
+	<update id="updateSelective" parameterType="com.qhit.addupload2.pojo.Addupload2" > 
+		update addupload2 
+		<set > 
+			<if test="name != null and name!='' " > 
+				name = #{name}, 
+			</if> 
+			<if test="size != null and size!='' " > 
+				size = #{size}, 
+			</if> 
+			<if test="todate != null and todate!='' " > 
+				todate = #{todate}, 
+			</if> 
+			<if test="userId != null and userId!='' " > 
+				user_id = #{userId}, 
+			</if> 
+		</set> 
+		where id = #{id} 
+	</update> 
+	<update id="update" parameterType="com.qhit.addupload2.pojo.Addupload2" > 
+		update addupload2 
+		set  name = #{name}, size = #{size}, todate = #{todate}, user_id = #{userId} 
+		where id = #{id} 
+	</update>
+	<select id="findAll" resultMap="BaseResultMap" > 
+		select 
+		a.*,b.cname
+		from addupload2 a join base_user b on a.user_id=b.user_id
+	</select> 
+	<select id="findByName" resultMap="BaseResultMap" parameterType="java.lang.String" > 
+		select 
+		<include refid="Base_Column_List" /> 
+		from addupload2 
+		where name = #{name} 
+	</select> 
+	<select id="findBySize" resultMap="BaseResultMap" parameterType="java.lang.String" > 
+		select 
+		<include refid="Base_Column_List" /> 
+		from addupload2 
+		where size = #{size} 
+	</select> 
+	<select id="findByTodate" resultMap="BaseResultMap" parameterType="java.lang.String" > 
+		select 
+		<include refid="Base_Column_List" /> 
+		from addupload2 
+		where todate = #{todate} 
+	</select> 
+	<select id="findByUserId" resultMap="BaseResultMap" parameterType="java.lang.Integer" > 
+		select 
+		<include refid="Base_Column_List" /> 
+		from addupload2 
+		where user_id = #{userId} 
+	</select> 
+	<delete id="deleteBatch" parameterType="java.util.Arrays"> 
+		delete from addupload2 where id in 
+		<foreach collection="array" item="id" open="(" close=")" separator=","> 
+			#{id} 
+		</foreach> 
+	</delete> 
+	<select id="search" parameterType="com.qhit.addupload2.pojo.Addupload2" resultMap="BaseResultMap"> 
+		select * from  addupload2 
+		<where > 
+			<if test="name != null and name!='' " > 
+				 and name = #{name} 
+			</if> 
+			<if test="size != null and size!='' " > 
+				 and size = #{size} 
+			</if> 
+			<if test="todate != null and todate!='' " > 
+				 and todate = #{todate} 
+			</if> 
+			<if test="userId != null and userId!='' " > 
+				 and user_id = #{userId} 
+			</if> 
+		</where> 
+	</select> 
+</mapper> 
