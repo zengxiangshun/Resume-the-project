@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?> 
+<!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Mapper 3.0" "http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+<mapper namespace="com.qhit.chargeRecord.dao.IChargeRecordDao"> 
+	<!-- 自定义结果集 --> 
+	<resultMap id="BaseResultMap" type="com.qhit.chargeRecord.pojo.ChargeRecord"> 
+		<id property="chargeId" column="charge_id" javaType="java.lang.Integer"></id> 
+		<result property="patientId" column="patient_id" javaType="java.lang.Integer"></result> 
+		<result property="doctorId" column="doctor_id" javaType="java.lang.Integer"></result> 
+		<result property="amount" column="amount" javaType="java.lang.Double"></result> 
+		<result property="chargeDate" column="charge_date" javaType="java.lang.String"></result> 
+		<result property="chargeUser" column="charge_user" javaType="java.lang.Integer"></result> 
+	</resultMap> 
+ 
+	<!-- 在各种标签中，id属性必须与接口中的方法名一样，id的值必须是唯一的，parameterType指查询时使用的参数类型， 
+	resultType属性指明查询返回的结果集类型    --> 
+ 
+	<sql id="Base_Column_List" > 
+		charge_id,patient_id,doctor_id,amount,charge_date,charge_user 
+	</sql> 
+	<select id="findById" resultMap="BaseResultMap" parameterType="java.lang.Integer" > 
+		select 
+		<include refid="Base_Column_List" /> 
+		from charge_record 
+		where charge_id = #{chargeId} 
+	</select> 
+	<delete id="delete" parameterType="java.lang.Integer" > 
+		delete from charge_record 
+		where charge_id = #{chargeId} 
+	</delete> 
+	<insert id="insert" parameterType="com.qhit.chargeRecord.pojo.ChargeRecord" > 
+		insert into charge_record(patient_id,doctor_id,amount,charge_date,charge_user) 
+		values (#{patientId},#{doctorId},#{amount},#{chargeDate},#{chargeUser}) 
+	</insert> 
+	<update id="updateSelective" parameterType="com.qhit.chargeRecord.pojo.ChargeRecord" > 
+		update charge_record 
+		<set > 
+			<if test="patientId != null and patientId!='' " > 
+				patient_id = #{patientId}, 
+			</if> 
+			<if test="doctorId != null and doctorId!='' " > 
+				doctor_id = #{doctorId}, 
+			</if> 
+			<if test="amount != null and amount!='' " > 
+				amount = #{amount}, 
+			</if> 
+			<if test="chargeDate != null and chargeDate!='' " > 
+				charge_date = #{chargeDate}, 
+			</if> 
+			<if test="chargeUser != null and chargeUser!='' " > 
+				charge_user = #{chargeUser}, 
+			</if> 
+		</set> 
+		where charge_id = #{chargeId} 
+	</update> 
+	<update id="update" parameterType="com.qhit.chargeRecord.pojo.ChargeRecord" > 
+		update charge_record 
+		set  patient_id = #{patientId}, doctor_id = #{doctorId}, amount = #{amount}, charge_date = #{chargeDate}, charge_user = #{chargeUser} 
+		where charge_id = #{chargeId} 
+	</update> 
+	<select id="findAll" resultMap="BaseResultMap" > 
+		select 
+		<include refid="Base_Column_List" /> 
+		from charge_record
+		ORDER BY charge_id DESC
+	</select> 
+	<select id="findByPatientId" resultMap="BaseResultMap" parameterType="java.lang.Integer" > 
+		select 
+		<include refid="Base_Column_List" /> 
+		from charge_record 
+		where patient_id = #{patientId} 
+	</select> 
+	<select id="findByDoctorId" resultMap="BaseResultMap" parameterType="java.lang.Integer" > 
+		select 
+		<include refid="Base_Column_List" /> 
+		from charge_record 
+		where doctor_id = #{doctorId} 
+	</select> 
+	<select id="findByAmount" resultMap="BaseResultMap" parameterType="java.lang.Double" > 
+		select 
+		<include refid="Base_Column_List" /> 
+		from charge_record 
+		where amount = #{amount} 
+	</select> 
+	<select id="findByChargeDate" resultMap="BaseResultMap" parameterType="java.lang.String" > 
+		select 
+		<include refid="Base_Column_List" /> 
+		from charge_record 
+		where charge_date = #{chargeDate} 
+	</select> 
+	<select id="findByChargeUser" resultMap="BaseResultMap" parameterType="java.lang.Integer" > 
+		select 
+		<include refid="Base_Column_List" /> 
+		from charge_record 
+		where charge_user = #{chargeUser} 
+	</select> 
+	<delete id="deleteBatch" parameterType="java.util.Arrays"> 
+		delete from charge_record where charge_id in 
+		<foreach collection="array" item="id" open="(" close=")" separator=","> 
+			#{id} 
+		</foreach> 
+	</delete> 
+	<select id="search" parameterType="com.qhit.chargeRecord.pojo.ChargeRecord" resultMap="BaseResultMap"> 
+		select * from  charge_record 
+		<where > 
+			<if test="patientId != null and patientId!='' " > 
+				 and patient_id = #{patientId} 
+			</if> 
+			<if test="doctorId != null and doctorId!='' " > 
+				 and doctor_id = #{doctorId} 
+			</if> 
+			<if test="amount != null and amount!='' " > 
+				 and amount = #{amount} 
+			</if> 
+			<if test="chargeDate != null and chargeDate!='' " > 
+				 and charge_date = #{chargeDate} 
+			</if> 
+			<if test="chargeUser != null and chargeUser!='' " > 
+				 and charge_user = #{chargeUser} 
+			</if> 
+		</where> 
+	</select> 
+</mapper> 

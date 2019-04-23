@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?> 
+<!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Mapper 3.0" "http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+<mapper namespace="com.qhit.chargeRecordinfo.dao.IChargeRecordinfoDao"> 
+	<!-- 自定义结果集 --> 
+	<resultMap id="BaseResultMap" type="com.qhit.chargeRecordinfo.pojo.ChargeRecordinfo"> 
+		<id property="chargeInfoid" column="charge_infoid" javaType="java.lang.Integer"></id> 
+		<result property="chargeId" column="charge_id" javaType="java.lang.Integer"></result> 
+		<result property="codeId" column="code_id" javaType="java.lang.Integer"></result> 
+		<result property="unitprc" column="unitprc" javaType="java.lang.Double"></result> 
+		<result property="amt" column="amt" javaType="java.lang.Integer"></result> 
+	</resultMap> 
+ 
+	<!-- 在各种标签中，id属性必须与接口中的方法名一样，id的值必须是唯一的，parameterType指查询时使用的参数类型， 
+	resultType属性指明查询返回的结果集类型    --> 
+ 
+	<sql id="Base_Column_List" > 
+		charge_infoid,charge_id,code_id,unitprc,amt 
+	</sql> 
+	<select id="findById" resultMap="BaseResultMap" parameterType="java.lang.Integer" > 
+		select 
+		<include refid="Base_Column_List" /> 
+		from charge_recordinfo 
+		where charge_infoid = #{chargeInfoid} 
+	</select> 
+	<delete id="delete" parameterType="java.lang.Integer" > 
+		delete from charge_recordinfo 
+		where charge_infoid = #{chargeInfoid} 
+	</delete> 
+	<insert id="insert" parameterType="com.qhit.chargeRecordinfo.pojo.ChargeRecordinfo" > 
+		insert into charge_recordinfo(charge_id,code_id,unitprc,amt) 
+		values (#{chargeId},#{codeId},#{unitprc},#{amt}) 
+	</insert> 
+	<update id="updateSelective" parameterType="com.qhit.chargeRecordinfo.pojo.ChargeRecordinfo" > 
+		update charge_recordinfo 
+		<set > 
+			<if test="chargeId != null and chargeId!='' " > 
+				charge_id = #{chargeId}, 
+			</if> 
+			<if test="codeId != null and codeId!='' " > 
+				code_id = #{codeId}, 
+			</if> 
+			<if test="unitprc != null and unitprc!='' " > 
+				unitprc = #{unitprc}, 
+			</if> 
+			<if test="amt != null and amt!='' " > 
+				amt = #{amt}, 
+			</if> 
+		</set> 
+		where charge_infoid = #{chargeInfoid} 
+	</update> 
+	<update id="update" parameterType="com.qhit.chargeRecordinfo.pojo.ChargeRecordinfo" > 
+		update charge_recordinfo 
+		set  charge_id = #{chargeId}, code_id = #{codeId}, unitprc = #{unitprc}, amt = #{amt} 
+		where charge_infoid = #{chargeInfoid} 
+	</update> 
+	<select id="findAll" resultMap="BaseResultMap" > 
+		select 
+		<include refid="Base_Column_List" /> 
+		from charge_recordinfo 
+	</select> 
+	<select id="findByChargeId" resultMap="BaseResultMap" parameterType="java.lang.Integer" > 
+		select 
+		<include refid="Base_Column_List" /> 
+		from charge_recordinfo 
+		where charge_id = #{chargeId} 
+	</select> 
+	<select id="findByCodeId" resultMap="BaseResultMap" parameterType="java.lang.Integer" > 
+		select 
+		<include refid="Base_Column_List" /> 
+		from charge_recordinfo 
+		where code_id = #{codeId} 
+	</select> 
+	<select id="findByUnitprc" resultMap="BaseResultMap" parameterType="java.lang.Double" > 
+		select 
+		<include refid="Base_Column_List" /> 
+		from charge_recordinfo 
+		where unitprc = #{unitprc} 
+	</select> 
+	<select id="findByAmt" resultMap="BaseResultMap" parameterType="java.lang.Integer" > 
+		select 
+		<include refid="Base_Column_List" /> 
+		from charge_recordinfo 
+		where amt = #{amt} 
+	</select> 
+	<delete id="deleteBatch" parameterType="java.util.Arrays"> 
+		delete from charge_recordinfo where charge_infoid in 
+		<foreach collection="array" item="id" open="(" close=")" separator=","> 
+			#{id} 
+		</foreach> 
+	</delete> 
+	<select id="search" parameterType="com.qhit.chargeRecordinfo.pojo.ChargeRecordinfo" resultMap="BaseResultMap"> 
+		select * from  charge_recordinfo 
+		<where > 
+			<if test="chargeId != null and chargeId!='' " > 
+				 and charge_id = #{chargeId} 
+			</if> 
+			<if test="codeId != null and codeId!='' " > 
+				 and code_id = #{codeId} 
+			</if> 
+			<if test="unitprc != null and unitprc!='' " > 
+				 and unitprc = #{unitprc} 
+			</if> 
+			<if test="amt != null and amt!='' " > 
+				 and amt = #{amt} 
+			</if> 
+		</where> 
+	</select> 
+</mapper> 
