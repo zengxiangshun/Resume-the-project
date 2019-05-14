@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?> 
+<!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Mapper 3.0" "http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+<mapper namespace="com.qhit.baseChat.dao.IBaseChatDao"> 
+	<!-- 自定义结果集 --> 
+	<resultMap id="BaseResultMap" type="com.qhit.baseChat.pojo.BaseChat"> 
+		<id property="chatId" column="chat_id" javaType="java.lang.Integer"></id> 
+		<result property="auId" column="au_id" javaType="java.lang.Integer"></result> 
+		<result property="buId" column="bu_id" javaType="java.lang.Integer"></result> 
+		<result property="status" column="status" javaType="java.lang.Integer"></result> 
+		<result property="mass" column="mass" javaType="java.lang.String"></result> 
+	</resultMap> 
+
+	<!-- 在各种标签中，id属性必须与接口中的方法名一样，id的值必须是唯一的，parameterType指查询时使用的参数类型， 
+	resultType属性指明查询返回的结果集类型    --> 
+ 
+	<sql id="Base_Column_List" > 
+		chat_id,au_id,bu_id,status,mass 
+	</sql> 
+	<select id="findById" resultMap="BaseResultMap" parameterType="java.lang.Integer" > 
+		select 
+		<include refid="Base_Column_List" /> 
+		from base_chat 
+		where chat_id = #{chatId} 
+	</select> 
+	<delete id="delete" parameterType="java.lang.Integer" > 
+		delete from base_chat 
+		where chat_id = #{chatId} 
+	</delete> 
+	<insert id="insert" parameterType="com.qhit.baseChat.pojo.BaseChat" > 
+		insert into base_chat(au_id,bu_id,status,mass) 
+		values (#{auId},#{buId},#{status},#{mass}) 
+	</insert> 
+	<update id="updateSelective" parameterType="com.qhit.baseChat.pojo.BaseChat" > 
+		update base_chat 
+		<set > 
+			<if test="auId != null and auId!='' " > 
+				au_id = #{auId}, 
+			</if> 
+			<if test="buId != null and buId!='' " > 
+				bu_id = #{buId}, 
+			</if> 
+			<if test="status != null and status!='' " > 
+				status = #{status}, 
+			</if> 
+			<if test="mass != null and mass!='' " > 
+				mass = #{mass}, 
+			</if> 
+		</set> 
+		where chat_id = #{chatId} 
+	</update> 
+	<update id="update" parameterType="com.qhit.baseChat.pojo.BaseChat" > 
+		update base_chat 
+		set  au_id = #{auId}, bu_id = #{buId}, status = #{status}, mass = #{mass} 
+		where chat_id = #{chatId} 
+	</update> 
+	<select id="findAll" resultMap="BaseResultMap" > 
+		select 
+		<include refid="Base_Column_List" /> 
+		from base_chat 
+	</select> 
+	<select id="findByAuId" resultMap="BaseResultMap" parameterType="java.lang.Integer" > 
+		select 
+		<include refid="Base_Column_List" /> 
+		from base_chat 
+		where au_id = #{auId} 
+	</select> 
+	<select id="findByBuId" resultMap="BaseResultMap" parameterType="java.lang.Integer" > 
+		select 
+		<include refid="Base_Column_List" /> 
+		from base_chat 
+		where bu_id = #{buId} 
+	</select> 
+	<select id="findByStatus" resultMap="BaseResultMap" parameterType="java.lang.Integer" > 
+		select 
+		<include refid="Base_Column_List" /> 
+		from base_chat 
+		where status = #{status} 
+	</select> 
+	<select id="findByMass" resultMap="BaseResultMap" parameterType="java.lang.String" > 
+		select 
+		<include refid="Base_Column_List" /> 
+		from base_chat 
+		where mass = #{mass} 
+	</select> 
+	<delete id="deleteBatch" parameterType="java.util.Arrays"> 
+		delete from base_chat where chat_id in 
+		<foreach collection="array" item="id" open="(" close=")" separator=","> 
+			#{id} 
+		</foreach> 
+	</delete> 
+	<select id="search" parameterType="com.qhit.baseChat.pojo.BaseChat" resultMap="BaseResultMap">
+		SELECT * FROM  base_chat bc WHERE bc.au_id=#{auId} AND bc.bu_id=#{buId} OR bc.au_id=#{buId} AND bc.bu_id=#{auId}
+<!--		<where > -->
+<!--			<if test="auId != null and auId!='' " > -->
+<!--				 and au_id = #{auId} -->
+<!--			</if> -->
+<!--			<if test="buId != null and buId!='' " > -->
+<!--				 and bu_id = #{buId} -->
+<!--			</if> -->
+<!--			<if test="status != null and status!='' " > -->
+<!--				 and status = #{status} -->
+<!--			</if> -->
+<!--			<if test="mass != null and mass!='' " > -->
+<!--				 and mass = #{mass} -->
+<!--			</if> -->
+<!--		</where> -->
+	</select>
+	<select id="searchs" parameterType="com.qhit.baseChat.pojo.BaseChat" resultMap="BaseResultMap">
+		SELECT * FROM  base_chat
+				<where >
+					<if test="auId != null and auId!='' " >
+						 and au_id = #{auId}
+					</if>
+					<if test="buId != null and buId!='' " >
+						 and bu_id = #{buId}
+					</if>
+					<if test="status != null and status!='' " >
+						 and status = #{status}
+					</if>
+					<if test="mass != null and mass!='' " >
+						 and mass = #{mass}
+					</if>
+				</where>
+	</select>
+</mapper> 

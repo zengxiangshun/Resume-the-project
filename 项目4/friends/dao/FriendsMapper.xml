@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?> 
+<!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Mapper 3.0" "http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+<mapper namespace="com.qhit.friends.dao.IFriendsDao"> 
+	<!-- 自定义结果集 --> 
+	<resultMap id="BaseResultMap" type="com.qhit.friends.pojo.Friends"> 
+		<id property="friendId" column="friend_id" javaType="java.lang.Integer"></id> 
+		<result property="auId" column="au_id" javaType="java.lang.Integer"></result> 
+		<result property="buId" column="bu_id" javaType="java.lang.Integer"></result> 
+		<result property="name" column="name" javaType="java.lang.String"></result>
+		<result property="ace" column="ace" javaType="java.lang.String"></result>
+	</resultMap>
+
+	<!-- 在各种标签中，id属性必须与接口中的方法名一样，id的值必须是唯一的，parameterType指查询时使用的参数类型， 
+	resultType属性指明查询返回的结果集类型    --> 
+ 
+	<sql id="Base_Column_List" > 
+		friend_id,au_id,bu_id 
+	</sql> 
+	<select id="findById" resultMap="BaseResultMap" parameterType="java.lang.Integer" > 
+		select 
+		<include refid="Base_Column_List" /> 
+		from friends 
+		where friend_id = #{friendId} 
+	</select> 
+	<delete id="delete" parameterType="java.lang.Integer" > 
+		delete from friends 
+		where friend_id = #{friendId} 
+	</delete> 
+	<insert id="insert" parameterType="com.qhit.friends.pojo.Friends" > 
+		insert into friends(au_id,bu_id) 
+		values (#{auId},#{buId}) 
+	</insert> 
+	<update id="updateSelective" parameterType="com.qhit.friends.pojo.Friends" > 
+		update friends 
+		<set > 
+			<if test="auId != null and auId!='' " > 
+				au_id = #{auId}, 
+			</if> 
+			<if test="buId != null and buId!='' " > 
+				bu_id = #{buId}, 
+			</if> 
+		</set> 
+		where friend_id = #{friendId} 
+	</update> 
+	<update id="update" parameterType="com.qhit.friends.pojo.Friends" > 
+		update friends 
+		set  au_id = #{auId}, bu_id = #{buId} 
+		where friend_id = #{friendId} 
+	</update> 
+	<select id="findAll" resultMap="BaseResultMap" > 
+		select 
+		<include refid="Base_Column_List" /> 
+		from friends 
+	</select> 
+	<select id="findByAuId" resultMap="BaseResultMap" parameterType="java.lang.Integer" > 
+		select 
+		<include refid="Base_Column_List" /> 
+		from friends 
+		where au_id = #{auId} 
+	</select> 
+	<select id="findByBuId" resultMap="BaseResultMap" parameterType="java.lang.Integer" > 
+		select 
+		<include refid="Base_Column_List" /> 
+		from friends 
+		where bu_id = #{buId} 
+	</select> 
+	<delete id="deleteBatch" parameterType="java.util.Arrays"> 
+		delete from friends where friend_id in 
+		<foreach collection="array" item="id" open="(" close=")" separator=","> 
+			#{id} 
+		</foreach> 
+	</delete> 
+	<select id="search" parameterType="com.qhit.friends.pojo.Friends" resultMap="BaseResultMap">
+
+		SELECT * FROM  friends f LEFT JOIN (SELECT *,COUNT(*) ace FROM base_chat bc WHERE bc.bu_id=#{auId} AND bc.status=2 GROUP BY bc.au_id) a  ON f.bu_id=a.au_id JOIN base_user bu ON f.bu_id=bu.user_id WHERE f.au_id=#{auId}
+<!--		SELECT * FROM  friends  f JOIN base_user bu ON f.bu_id=bu.user_id-->
+<!--		<where > -->
+<!--			<if test="auId != null and auId!='' " > -->
+<!--				 and au_id = #{auId} -->
+<!--			</if> -->
+<!--			<if test="buId != null and buId!='' " > -->
+<!--				 and bu_id = #{buId} -->
+<!--			</if> -->
+<!--		</where> -->
+	</select> 
+</mapper> 
