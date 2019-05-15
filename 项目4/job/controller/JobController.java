@@ -55,5 +55,14 @@ public class JobController {
         List<Job> list = jobService.search(job); 
         return list; 
     } 
+    
+    //获取session里用户id
+    public String baseUserLogin(HttpSession session) {
+        Object baseUserLogin = session.getAttribute("baseUserLogin");
+        String s = baseUserLogin.toString();
+        JSONObject jsonObject = JSONObject.fromObject(s);
+        String userId = jsonObject.getString("userId");
+        return userId;
+    }
 
 } 
