@@ -7,9 +7,7 @@ import javax.annotation.Resource;
 import java.util.List; 
 import org.springframework.web.bind.annotation.RestController; 
 
-/** 
-* Created by GeneratorCode on 2019/05/15
-*/ 
+ 
 
 @RestController 
 @RequestMapping("/job") 
