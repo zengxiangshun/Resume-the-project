@@ -6,7 +6,6 @@ import java.net.URL;
 
 /**
  * 文件下载
- * Created by 16682 on 2019/5/25.
  */
 public class downloadHttp {
     /**
