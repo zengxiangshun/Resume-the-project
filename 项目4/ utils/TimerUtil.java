@@ -9,8 +9,11 @@ import java.util.TimerTask;
  * Created by 16682 on 2019/6/9.
  */
 public class TimerUtil {
-    public void timers(Integer hour,Integer minute,Integer second) {
+    public void timers(Integer year,Integer month,Integer date,Integer hour,Integer minute,Integer second) {
         Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.YEAR, year);    // 控制年
+        calendar.set(Calendar.MONTH, month-1);    // 控制月
+        calendar.set(Calendar.DATE, date);    // 控制日
         calendar.set(Calendar.HOUR_OF_DAY, hour); // 控制时
         calendar.set(Calendar.MINUTE, minute);    // 控制分
         calendar.set(Calendar.SECOND, second);    // 控制秒
@@ -21,6 +24,7 @@ public class TimerUtil {
         timer.scheduleAtFixedRate(new TimerTask() {
             public void run() {
                 System.out.println("-------设定要指定任务--------");
+
             }
         }, time, 1000 * 60 * 60 * 24);// 这里设定将延时每天固定执行
     }
